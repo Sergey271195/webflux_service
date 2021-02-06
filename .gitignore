@@ -1,0 +1,4 @@
+src/main/resources/metrika.properties
+target/
+update_task.iml
+.idea/
