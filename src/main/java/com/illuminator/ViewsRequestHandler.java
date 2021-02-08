@@ -2,41 +2,45 @@ package com.illuminator;
 
 import com.illuminator.dto.ByTimeResponseDto;
 import com.illuminator.dto.DrilldownResponseDto;
+import com.illuminator.dto.ResponseDtoBase;
 import com.illuminator.entity.main.Counter;
 import com.illuminator.exceptions.ErrorResponseException;
 import com.illuminator.request.ByTimeRequestParametersDto;
 import com.illuminator.request.MetrikaUriBuilder;
 import com.illuminator.request.RequestParameterDtoBase;
 import com.illuminator.request.ViewsRequestBuilder;
+import com.illuminator.response.ByTimeResponseHandler;
+import com.illuminator.response.DrilldownResponseHandler;
 import com.illuminator.util.DimensionProjections;
 import com.illuminator.util.ExchangeFunctionLogger;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class ViewsRequestHandler {
 
     private static WebClient client = setWebClient();
 
-    public static void handleCounter(Counter counter) {
+    public static List<ResponseDtoBase> handleCounter(Counter counter) {
         List<RequestParameterDtoBase> requestList = getRequestDto(counter);
-        requestList.stream().forEach(ViewsRequestHandler::handleRequestDto);
+        return requestList.stream().map(ViewsRequestHandler::handleRequestDto)
+            .collect(Collectors.toList());
     }
 
-    private static void handleRequestDto(RequestParameterDtoBase requestDto) {
+    private static ResponseDtoBase handleRequestDto(RequestParameterDtoBase requestDto) {
         WebClient.ResponseSpec spec = client.get()
                 .uri(uriBuilder ->
                         MetrikaUriBuilder.buildRequestUri(uriBuilder, requestDto).build()
                 ).retrieve();
         WebClient.ResponseSpec errorHandledSpec = handleResponseSpecErrors(spec);
         if (requestDto.getClass() == ByTimeRequestParametersDto.class) {
-            System.out.println("Request DTO CLASS BY TIME " + requestDto.getClass().getSimpleName());
-            handleStatDyTimeRepsonse(errorHandledSpec);
+            return handleStatDyTimeRepsonse(errorHandledSpec);
         } else {
-            System.out.println("Request DTO CLASS DRILLDOWN " + requestDto.getClass().getSimpleName());
-            handleDrilldownRepsonse(errorHandledSpec);
+            return handleDrilldownRepsonse(errorHandledSpec);
         }
     }
 
@@ -48,18 +52,12 @@ public class ViewsRequestHandler {
         );
     }
 
-    private static void handleStatDyTimeRepsonse(WebClient.ResponseSpec specs) {
-        specs.bodyToMono(ByTimeResponseDto.class).subscribe(byTimeResponse -> {
-            System.out.println("Stat by Time response");
-            System.out.println(byTimeResponse);
-        });
+    private static ResponseDtoBase handleStatDyTimeRepsonse(WebClient.ResponseSpec specs) {
+        return specs.bodyToMono(ByTimeResponseDto.class).block();
     }
 
-    private static void handleDrilldownRepsonse(WebClient.ResponseSpec specs) {
-        specs.bodyToMono(DrilldownResponseDto.class).subscribe(DrilldownResponse -> {
-            System.out.println("Drilldown Repsonse");
-            System.out.println(DrilldownResponse);
-        });
+    private static ResponseDtoBase handleDrilldownRepsonse(WebClient.ResponseSpec specs) {
+        return specs.bodyToMono(DrilldownResponseDto.class).block();
     }
 
     private static List<RequestParameterDtoBase> getRequestDto(Counter counter) {

@@ -1,9 +1,11 @@
 package com.illuminator.dto;
 
-import java.time.LocalDate;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
-public class DrilldownResponseDto {
+@Component
+public class DrilldownResponseDto extends ResponseDtoBase {
 
     private QueryDto query;
     private List<DrilldownDataEntry> data;

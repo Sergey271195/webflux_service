@@ -1,9 +1,12 @@
 package com.illuminator.dto;
 
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.util.List;
 
-public class ByTimeResponseDto {
+@Component
+public class ByTimeResponseDto extends ResponseDtoBase {
 
     private QueryDto query;
     private List<ByTimeDataEntry> data;

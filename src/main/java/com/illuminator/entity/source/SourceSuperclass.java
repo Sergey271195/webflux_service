@@ -38,7 +38,7 @@ public abstract class SourceSuperclass<T> {
 
     @Override
     public String toString() {
-        return "SourceSuperclass=[metrikaId=" + metrikaId + ", name=" + name +']';
+        return this.getClass().getSimpleName() + "[metrikaId=" + metrikaId + ", name=" + name +']';
     }
 
     @Override

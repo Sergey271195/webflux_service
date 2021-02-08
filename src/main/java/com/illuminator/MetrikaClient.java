@@ -1,33 +1,29 @@
 package com.illuminator;
 
-import com.illuminator.dto.ByTimeResponseDto;
 import com.illuminator.entity.main.Counter;
-import com.illuminator.entity.source.SourceSuperclass;
 import com.illuminator.exceptions.ErrorResponseException;
 import com.illuminator.repository.CounterEagerRepository;
-import com.illuminator.request.ViewsRequestBuilder;
-import com.illuminator.util.DimensionProjections;
+import com.illuminator.response.ByTimeResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
-@Component
-public class MetrikaClient implements ApplicationListener<ContextRefreshedEvent> {
+@Controller
+public class MetrikaClient {
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
 
     @Autowired
     private CounterEagerRepository counterRepository;
+
+    @Autowired
+    private ByTimeResponseHandler responseHandler;
+
 
     public List<Counter> getRelevantCounters() {
         return counterRepository.getCountersEager();
@@ -64,11 +60,12 @@ public class MetrikaClient implements ApplicationListener<ContextRefreshedEvent>
                 });
     }
 
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+    public void onApplicationEvent() {
         //getStatByTimeData();
         var relevantCounters = counterRepository.getCountersEager();
         relevantCounters.stream().limit(1)
-                .forEach(ViewsRequestHandler::handleCounter);
+                .map(ViewsRequestHandler::handleCounter)
+                .flatMap(List::stream)
+                .forEach(responseHandler::handleResponse);
     }
 }

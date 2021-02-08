@@ -1,13 +1,22 @@
 package com.illuminator;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringUpdater {
+public class SpringUpdater implements CommandLineRunner {
+
+    @Autowired
+    private MetrikaClient metrikaClient;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringUpdater.class, args);
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        metrikaClient.onApplicationEvent();
+    }
 }

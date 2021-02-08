@@ -13,7 +13,6 @@ public class DrilldownDataEntry {
         return "\n\tDrilldownDataEntry={" + dimension + ", metrics=" + metrics + ", expand=" + expand + '}';
     }
 
-
     public List<Long> getMetrics() {
         return metrics;
     }
