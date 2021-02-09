@@ -3,7 +3,6 @@ package com.illuminator.response;
 import com.illuminator.entity.source.*;
 import com.illuminator.repository.source.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -34,7 +33,6 @@ public class SourceRepositoryHolder {
     private Map<Class<? extends SourceSuperclass>, BaseSourceRepository> sourceToRepositoryMap = new HashMap<>();
 
     public SourceRepositoryHolder() {
-        initializeSourceMap();
     }
 
     private void initializeSourceMap() {
@@ -47,6 +45,7 @@ public class SourceRepositoryHolder {
     }
 
     public BaseSourceRepository getSourceRepository(Class<? extends SourceSuperclass> source) {
+        initializeSourceMap();
         return sourceToRepositoryMap.get(source);
     }
 
