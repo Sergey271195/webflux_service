@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface TrafficSourceRepository extends CrudRepository<TrafficSource, String> {
-    Optional<TrafficSource> findByMetrikaId(String id);
+    Optional<TrafficSource> findByMetrikaId(String metrikaId);
 }

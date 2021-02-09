@@ -1,16 +1,12 @@
 package com.illuminator.response;
 
 import com.illuminator.dto.DrilldownResponseDto;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DrilldownResponseHandler {
 
-    private final DrilldownResponseDto responseDto;
-
-    public DrilldownResponseHandler(DrilldownResponseDto responseDto) {
-        this.responseDto = responseDto;
-    }
-
-    public void handleResponse() {
+    public void handleResponse(DrilldownResponseDto responseDto) {
         System.out.println(responseDto);
     }
 

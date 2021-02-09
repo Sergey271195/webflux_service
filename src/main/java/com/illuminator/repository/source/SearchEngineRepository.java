@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SearchEngineRepository extends CrudRepository<SearchEngine, String> {
-    Optional<SearchEngine> findByMetrikaId(String id);
+    Optional<SearchEngine> findByMetrikaId(String metrikaId);
 }

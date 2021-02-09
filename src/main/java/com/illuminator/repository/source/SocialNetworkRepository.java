@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SocialNetworkRepository extends CrudRepository<SocialNetwork, String> {
-    Optional<SocialNetwork> findByMetrikaId(String id);
+    Optional<SocialNetwork> findByMetrikaId(String metrikaId);
 }

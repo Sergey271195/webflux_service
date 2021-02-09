@@ -4,6 +4,7 @@ import com.illuminator.entity.main.Counter;
 import com.illuminator.exceptions.ErrorResponseException;
 import com.illuminator.repository.CounterEagerRepository;
 import com.illuminator.response.ByTimeResponseHandler;
+import com.illuminator.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class MetrikaClient {
     private CounterEagerRepository counterRepository;
 
     @Autowired
-    private ByTimeResponseHandler responseHandler;
+    private ResponseHandler responseHandler;
 
 
     public List<Counter> getRelevantCounters() {
