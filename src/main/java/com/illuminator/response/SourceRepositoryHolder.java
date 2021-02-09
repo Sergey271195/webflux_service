@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -30,7 +31,7 @@ public class SourceRepositoryHolder {
     @Autowired
     private TrafficSourceRepository trafficSourceRepository;
 
-    private Map<Class<? extends SourceSuperclass>, CrudRepository> sourceToRepositoryMap;
+    private Map<Class<? extends SourceSuperclass>, BaseSourceRepository> sourceToRepositoryMap = new HashMap<>();
 
     public SourceRepositoryHolder() {
         initializeSourceMap();
@@ -45,7 +46,7 @@ public class SourceRepositoryHolder {
         sourceToRepositoryMap.put(TrafficSource.class, trafficSourceRepository);
     }
 
-    public CrudRepository getSourceRepository(Class<? extends SourceSuperclass> source) {
+    public BaseSourceRepository getSourceRepository(Class<? extends SourceSuperclass> source) {
         return sourceToRepositoryMap.get(source);
     }
 

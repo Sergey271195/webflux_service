@@ -8,6 +8,8 @@ import com.illuminator.util.DimensionProjections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+
 @Service
 public class ByTimeResponseHandler {
 
@@ -17,11 +19,10 @@ public class ByTimeResponseHandler {
     public void handleResponse(ByTimeResponseDto responseDto) {
         String dimension = responseDto.getQuery().getDimensions().get(0);
         Class<? extends SourceSuperclass> source = DimensionProjections.dimensionStringToSourceRegistry.get(dimension);
-        System.out.println("Find by id: " + repositoryHolder.getSourceRepository(source).findBy
+        Serializable dimensionId = responseDto.getData().get(0).getDimensions().get(0).getId();
+        System.out.println("Find by id: " + repositoryHolder.getSourceRepository(source).findByMetrikaId(dimensionId));
         System.out.println("Handling Response");
         System.out.println(responseDto);
-        System.out.println(responseDto.getQuery().getDimensions().get(0));
-        System.out.println(repositoryHolder.getAdvEngineRepository().findByMetrikaId("ya_direct"));
     }
 
 }
